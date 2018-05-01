@@ -10,26 +10,7 @@
 
     </style>
     <h2>Hello [[prop1]]!</h2>
-    <file-drop-zone
-            multiple
-            accept=".csv, .tsv"
-            files="{{files}}"
-            last-error="{{error}}"
-            on-error="onError">
-
-      <!-- Custom slot element to style the interior of the drop zone -->
-      <div slot="drop-zone" class="layout vertical center center-justified">
-        <iron-icon icon="description"></iron-icon>
-        <div class="title">Drop CSV or TSV files here</div>
-        <!-- error message -->
-        <div class="small">[[error.message]]</div>
-        <!-- list of file selected -->
-        <template is="dom-repeat" items="[[files]]">
-          <div class="small">[[item.name]]</div>
-        </template>
-      </div>
-
-    </file-drop-zone>
+    <file-drop-zone multiple accept="[[filesAccepted]] files="[[filesSaved]] "></file-drop-zone>
   </template>
 
   <script>
@@ -45,10 +26,14 @@
       static get is() { return 'poly-share-url'; }
       static get properties() {
         return {
-          prop1: {
+            filesAccepted: {
             type: String,
-            value: 'poly-share-url'
-          }
+            value: ""
+          },
+            filesSaved: {
+                type: Array,
+                value: []
+            }
         };
       }
     }
