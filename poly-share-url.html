@@ -4,12 +4,111 @@
 <dom-module id="poly-share-url">
   <template>
     <style>
-      :host {
-        display: block;
-      }
+      
+	:host{
+		--title-size:22px;
+		--subtitle-size:18px;
+		--text-size:13px;
+		--brand-white:#fefefe;
+		--brand-black:#0d0d0d;
+		--brand-gray:#d9d9d9;
+		--brand--light-blue:#4d88ff;
+		--brand-dark-blue:#004d66;
+		--brand-purple:#8585e0;
+		--brand--light-blue-2:#cee5ef;
+		--layout-width:100%;
+		--brand-transparent:rgba(0,0,0,0);
+		--brand-transparent-background:rgba(0,0,0,0.4);
+	}
 
+	.card-container{
+		display: grid;
+		grid-template-columns: repeat(3,33%);
+		grid-gap: 10px 5px;
+		margin: 10px;
+		padding: 15px;
+	}
+
+	.card__link{
+		color:var(--brand--light-blue);
+		text-decoration: none;
+		padding:15px 12px;
+		word-break: break-all;
+	}
+
+	.card__link:visited {
+		text-decoration: none;
+		
+	}
+
+	.card__link:hover {
+		border-radius:10px;
+		color:var(--brand-white);
+		background:var(--brand-purple);
+		box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.3);
+	}
+
+	.card__link:active {
+		 transform: translateY(2px);
+	}
+
+
+	.card__link h1{
+		font-size:var(--title-size);
+	}
+	.card{
+		display: flex;
+		flex-flow: column wrap;
+		border:2px solid var(--brand-gray);
+		border-radius:10px;
+		box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.3);
+		background:var(--brand-white);
+		padding:10px;
+	}
+
+	.card-info{
+		color:var(--brand-black);
+		background:var(--brand--light-blue-2);
+		max-height: 160px;
+		overflow-y: auto;
+		border-radius:5px;
+		padding: 10px;
+		word-break: break-all;
+	}
+
+	@media screen and (max-width:767px){
+		:root{
+		--title-size:18px;
+		--subtitle-size:14px;
+		--text-size:12px;
+		--layout-width:100%;
+	}
+
+	.card-container{
+		display: grid;
+		grid-template-columns: repeat(2,50%);
+		grid-gap: 8px 3px;
+		margin: 4px;
+		padding: 4px;
+		width:100%;
+	}
+
+	}
     </style>
-    <h2>Hello [[prop1]]!</h2>
+	
+	<div class="card-container">
+	 <template is="dom-repeat" items="[[dataUploads]]" as="info">
+		<div class="card">
+			<a class="card__link" href=""><h1>[[info.url]]</h1></a>
+			<h3>[[info.author]]</h3>
+			<div class="card-info">
+			<p>[[info.description]]</p>
+			</div>
+		</div>
+	 </template>			
+	</div>
+		 
+	</div>
     <file-drop-zone multiple accept="[[filesAccepted]] files="[[filesSaved]] "></file-drop-zone>
   </template>
 
@@ -30,9 +129,9 @@
             type: String,
             value: ""
           },
-            filesSaved: {
+            dataUploads: {
                 type: Array,
-                value: []
+                value: [{url:"link.org",description:"descrp",author:"author"}]
             }
         };
       }
