@@ -15,6 +15,7 @@
 		--brand--light-blue:#4d88ff;
 		--brand-dark-blue:#004d66;
 		--brand-purple:#8585e0;
+		--brand-red:#ff3333;
 		--brand--light-blue-2:#cee5ef;
 		--layout-width:100%;
 		--brand-transparent:rgba(0,0,0,0);
@@ -76,6 +77,71 @@
 		word-break: break-all;
 	}
 
+	.upload-form__view{
+		display:flex;
+		background:var(--brand-white);
+		border-radius:10px;
+		background:var(--brand-white);
+		border:2.5px solid var(--brand--light-blue);
+	}
+	
+	.upload-form__button{
+		border-radius:10px;
+		background:var(--brand-white);
+		border:2.5px solid var(--brand--light-blue);
+		color:var(--brand--light-blue);
+		font-weight:bold;
+		text-decoration: none;
+		padding:15px 12px;
+		word-break: break-all;
+		margin: 10px;
+	}
+
+	.upload-form__button:focus {
+		outline: none;
+	}
+	
+	.upload-form__button:hover {
+		border-radius:10px;
+		border:1.5px solid var(--brand-gray);
+		color:var(--brand-white);
+		background:var(--brand-gray);
+		box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.3);
+	}
+
+	.upload-form__button:active {
+		 transform: translateY(2px);
+
+	}
+	
+	.upload-form__cancel-button{
+		border-radius:10px;
+		background:var(--brand-white);
+		border:2.5px solid var(--brand-red);
+		color:var(--brand-red);
+		font-weight:bold;
+		text-decoration: none;
+		padding:15px 12px;
+		word-break: break-all;
+		margin: 10px;
+	}
+
+	.upload-form__cancel-button:focus {
+		outline: none;
+	}
+	
+	.upload-form__cancel-button:hover {
+		border-radius:10px;
+		border:1.5px solid var(--brand-gray);
+		color:var(--brand-white);
+		background:var(--brand-gray);
+		box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.3);
+	}
+
+	.upload-form__cancel-button:active {
+		 transform: translateY(2px);
+	}
+
 	@media screen and (max-width:767px){
 		:root{
 		--title-size:18px;
@@ -95,6 +161,14 @@
 
 	}
     </style>
+	
+	<div class="upload-form">
+		<button class="upload-form__button" on-click="openForm">Upload file/link</button>
+		<div class="upload-form__view" hidden$=[[hide]]>
+		
+		<button class="upload-form__cancel-button" on-click="closeForm">Close</button>
+		</div>
+	</div>
 	
 	<div class="card-container">
 	 <template is="dom-repeat" items="[[dataUploads]]" as="info">
@@ -132,11 +206,28 @@
             dataUploads: {
                 type: Array,
                 value: [{url:"link.org",description:"descrp",author:"author"}]
-            }
+            },
+			hide:{
+				type:Boolean,
+				value:true
+			}
+			
         };
       }
+	  
+	  closeForm(){
+			this.set('hide', true);
+		}
+	
+	openForm(){
+			this.set('hide', false);
+	}
+	  
     }
-
-    window.customElements.define(PolyShareUrl.is, PolyShareUrl);
+    
+	
+	
+	window.customElements.define(PolyShareUrl.is, PolyShareUrl);
+	
   </script>
 </dom-module>
