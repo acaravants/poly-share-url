@@ -8,8 +8,7 @@
 <dom-module id="poly-share-url">
   <template>
     <style>
-
-	:host{
+:host{
 		--title-size:22px;
 		--subtitle-size:18px;
 		--text-size:13px;
@@ -43,7 +42,7 @@
 
 	.card__link:visited {
 		text-decoration: none;
-
+		
 	}
 
 	.card__link:hover {
@@ -69,6 +68,7 @@
 		box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.3);
 		background:var(--brand-white);
 		padding:10px;
+		justify-content: flex-end;
 	}
 
 	.card-info{
@@ -87,6 +87,10 @@
 		border-radius:10px;
 		background:var(--brand-white);
 		border:2.5px solid var(--brand--light-blue);
+		display: flex;
+		justify-content: space-between;
+		flex-flow: column wrap;
+		padding: 10px;
 	}
 
 	.upload-form__button{
@@ -182,11 +186,6 @@
         font-size: 0.6em;
     }
 
-    paper-button{
-        border-radius: 10px;
-        border: 1px solid #0b97c4;
-    }
-
 	@media screen and (max-width:767px){
 		:root{
 		--title-size:18px;
@@ -206,34 +205,34 @@
 
 	}
     </style>
-    <div class="form-container">
-        <h3>Comparte tu recurso </h3>
-        <file-drop-zone multiple accept="[[filesAccepted]]" files="{{files}}" last-error="{{error}}" on-error="onError">
-            <div slot="drop-zone" class="layout vertical center center-justified">
-                <iron-icon icon="description"></iron-icon>
-                <div class="title">[[getMessage()]]</div>
-                <!-- error message -->
-                <div class="small">[[error.message]]</div>
-                <!-- list of file selected -->
-                <template is="dom-repeat" items="{{files}}">
-                    <div class="small">{{item.name}}</div>
-                </template>
-            </div>
-        </file-drop-zone>
-        <iron-form>
-            <form is="iron-form">
-                <paper-input label="Url" id="url"></paper-input>
-                <paper-input label="Author" id="author"></paper-input>
-                <paper-textarea label="description" id="description" rows="3"></paper-textarea>
-                <paper-button raised on-tap="addCard">Save Card</paper-button>
-            </form>
-        </iron-form>
-    </div>
-
+	 
 	<div class="upload-form">
 		<button class="upload-form__button" on-click="openForm">Upload file/link</button>
         <template is="dom-if" if="[[!hide]]">
             <div class="upload-form__view">
+		
+				<iron-form>
+					<form is="iron-form">
+						<paper-input label="Url" id="url"></paper-input>
+						<paper-input label="Author" id="author"></paper-input>
+						<paper-textarea label="description" id="description" rows="3"></paper-textarea>
+						
+					</form>
+				</iron-form>
+				<file-drop-zone id="dragdrop" accept="[[filesAccepted]]" files="{{files}}" last-error="{{error}}" on-error="onError">
+					<div slot="drop-zone" class="layout vertical center center-justified">
+						<iron-icon icon="description"></iron-icon>
+						 <div class="title">Drop Files Here</div>
+						<div class="title">[[getMessage()]]</div>
+						<!-- error message -->
+						<div class="small">[[error.message]]</div>
+						<!-- list of file selected -->
+						<template is="dom-repeat" items="[[files]]">
+							<div class="small">[[item.name]]</div>
+						</template>
+					</div>
+				</file-drop-zone>
+				<button class="upload-form__button" on-click="uploadFile">Upload</button>            			
                 <button class="upload-form__cancel-button" on-click="closeForm">Close</button>
             </div>
         </template>
@@ -275,29 +274,13 @@
             },
             files: {
                 type: Array,
-                value: [],
-                observe: 'fileSaved'
+                value: []
             },
             dataUploads: {
                 type: Array,
-                value: [{url:"link.org",description:"descrp",author:"author"}]
+                value: []
             },
         };
-      }
-
-      addCard(){
-          if(this.$.url.value && this.$.author.value) {
-              let cardObject = {
-                  url: this.$.url.value,
-                  description: this.$.description.value,
-                  author: this.$.author.value,
-                  file: this.file
-              };
-              this.dataUploads.push(cardObject);
-              this.cleanCard();
-              console.log(this.dataUploads);
-              this.$.list.render();
-          }
       }
 
       cleanCard(){
@@ -306,15 +289,48 @@
           this.$.author.value = '';
           this.file = [];
       }
+
       closeForm(){
             this.set('hide', true);
       }
-    getMessage(){
-            return `Here drop only type files: ${this.filesAccepted}`;
-    }
+
       openForm(){
             this.set('hide', false);
       }
+	  
+	   uploadFile(){
+	
+		  if(this.$.url && this.$.author) {
+			let cardObject = {
+				url: this.$.url.value,
+				description: this.$.description.value,
+				author: this.$.author.value,
+			};
+		
+			this.dataUploads.push(cardObject);
+		   		   
+			this.dispatchEvent(new CustomEvent('upload-file', {
+					composed: true,
+					bubbles: true,
+					detail:{shareObject:cardObject,file:files} 
+					}));
+			this.cleanCard();
+			files = [];
+			this.set('hide', true);   
+			this.$.list.render();
+			
+			
+			}
+		
+		
+		
+	  }
+	  
+	
+	connectedCallback() {
+		super.connectedCallback(); 
+	}
+	  
     }
 
     window.customElements.define(PolyShareUrl.is, PolyShareUrl);
