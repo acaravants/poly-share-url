@@ -3,6 +3,7 @@
 <link rel="import" href="../iron-form/iron-form.html">
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-input/paper-textarea.html">
+<link rel="import" href="../paper-button/paper-button.html">
 
 <dom-module id="poly-share-url">
   <template>
@@ -181,6 +182,11 @@
         font-size: 0.6em;
     }
 
+    paper-button{
+        border-radius: 10px;
+        border: 1px solid #0b97c4;
+    }
+
 	@media screen and (max-width:767px){
 		:root{
 		--title-size:18px;
@@ -209,17 +215,17 @@
                 <!-- error message -->
                 <div class="small">[[error.message]]</div>
                 <!-- list of file selected -->
-                <template is="dom-repeat" items="[[files]]">
-                    <div class="small">[[item.name]]</div>
+                <template is="dom-repeat" items="{{files}}">
+                    <div class="small">{{item.name}}</div>
                 </template>
             </div>
         </file-drop-zone>
         <iron-form>
             <form is="iron-form">
-                <paper-input label="title" id="title" value="{{card.title}}">
-                <paper-textarea label="description" id="description" value="{{card.description}}"></paper-textarea>
-                <h2>{{card.title}}</h2>
-                <paper-checkbox name="cheese" value="yes" checked></paper-checkbox>
+                <paper-input label="Url" id="url"></paper-input>
+                <paper-input label="Author" id="author"></paper-input>
+                <paper-textarea label="description" id="description" rows="3"></paper-textarea>
+                <paper-button raised on-tap="addCard">Save Card</paper-button>
             </form>
         </iron-form>
     </div>
@@ -234,7 +240,7 @@
 	</div>
 
 	<div class="card-container">
-	 <template is="dom-repeat" items="[[dataUploads]]" as="info">
+	 <template is="dom-repeat" on-dom-change items="[[dataUploads]]" as="info">
 		<div class="card">
 			<a class="card__link" href=""><h1>[[info.url]]</h1></a>
 			<h3>[[info.author]]</h3>
@@ -274,14 +280,24 @@
             files: {
                 type: Array,
                 value: [],
-                computed: 'filesSaved()'
+                observe: 'fileSaved'
             },
-            card: {
-                card: Array,
+            cards: {
+                cards: Array,
                 value: [],
-                observer: 'getConsole'
+                notify: true
             }
         };
+      }
+
+      addCard(){
+        let cardObject = {
+            url: this.$.url.value,
+            description: this.$.description.value,
+            author: this.$.author.value
+        };
+        this.dataUploads.push(cardObject);
+        console.log(this.dataUploads)
       }
 
       getConsole(){
