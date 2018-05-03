@@ -299,37 +299,36 @@
       }
 	  
 	   uploadFile(){
-				
-	  if(this.$.url.value && this.$.author.value) {
-        let cardObject = {
-            url: this.$.url.value,
-            description: this.$.description.value,
-            author: this.$.author.value,
-        };
+	
+		  if(this.$.url && this.$.author) {
+			let cardObject = {
+				url: this.$.url.value,
+				description: this.$.description.value,
+				author: this.$.author.value,
+			};
 		
-        this.dataUploads.push(cardObject);
-       
-        this.$.list.render();
-		}
+			this.dataUploads.push(cardObject);
+		   		   
+			this.dispatchEvent(new CustomEvent('upload-file', {
+					composed: true,
+					bubbles: true,
+					detail:{shareObject:cardObject,file:files} 
+					}));
+			this.cleanCard();
+			files = [];
+			this.set('hide', true);   
+			this.$.list.render();
+			
+			
+			}
 		
-		console.log(typeof(files))
-		this.dispatchEvent(new CustomEvent('upload-file', {
-                composed: true,
-                bubbles: true,
-                detail:{shareObject:cardObject,file:files} 
-		        }));
-				this.cleanCard();
-				files = {};
-				this.set('hide', true);
+		
 		
 	  }
 	  
 	
 	connectedCallback() {
-		super.connectedCallback(); // DO THIS
-		console.log('found: '+ this.shadowRoot.querySelector("#url"));
-	
-		console.log('found: '+ this.shadowRoot.querySelector(".upload-form"));
+		super.connectedCallback(); 
 	}
 	  
     }
