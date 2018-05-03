@@ -8,7 +8,7 @@
 <dom-module id="poly-share-url">
   <template>
     <style>
-      
+
 	:host{
 		--title-size:22px;
 		--subtitle-size:18px;
@@ -43,7 +43,7 @@
 
 	.card__link:visited {
 		text-decoration: none;
-		
+
 	}
 
 	.card__link:hover {
@@ -240,7 +240,7 @@
 	</div>
 
 	<div class="card-container">
-	 <template is="dom-repeat" on-dom-change items="[[dataUploads]]" as="info">
+	 <template id="list" is="dom-repeat" items="[[dataUploads]]" as="info">
 		<div class="card">
 			<a class="card__link" href=""><h1>[[info.url]]</h1></a>
 			<h3>[[info.author]]</h3>
@@ -255,7 +255,7 @@
   <script>
     /**
      * `poly-share-url`
-     * 
+     *
      *
      * @customElement
      * @polymer
@@ -269,10 +269,6 @@
             type: String,
             value: ""
           },
-            dataUploads: {
-                type: Array,
-                value: [{url:"link.org",description:"descrp",author:"author"}]
-            },
 			hide:{
 				type:Boolean,
 				value:true
@@ -282,11 +278,10 @@
                 value: [],
                 observe: 'fileSaved'
             },
-            cards: {
-                cards: Array,
-                value: [],
-                notify: true
-            }
+            dataUploads: {
+                type: Array,
+                value: [{url:"link.org",description:"descrp",author:"author"}]
+            },
         };
       }
 
@@ -294,10 +289,20 @@
         let cardObject = {
             url: this.$.url.value,
             description: this.$.description.value,
-            author: this.$.author.value
+            author: this.$.author.value,
+            file: this.file
         };
         this.dataUploads.push(cardObject);
+        this.cleanCard();
+        this.$.list.render();
         console.log(this.dataUploads)
+      }
+
+      cleanCard(){
+          this.$.url.value = '';
+          this.$.description.value = '';
+          this.$.author.value = '';
+          this.file = [];
       }
 
       getConsole(){
