@@ -286,16 +286,18 @@
       }
 
       addCard(){
-        let cardObject = {
-            url: this.$.url.value,
-            description: this.$.description.value,
-            author: this.$.author.value,
-            file: this.file
-        };
-        this.dataUploads.push(cardObject);
-        this.cleanCard();
-        this.$.list.render();
-        console.log(this.dataUploads)
+          if(this.$.url.value && this.$.author.value) {
+              let cardObject = {
+                  url: this.$.url.value,
+                  description: this.$.description.value,
+                  author: this.$.author.value,
+                  file: this.file
+              };
+              this.dataUploads.push(cardObject);
+              this.cleanCard();
+              console.log(this.dataUploads);
+              this.$.list.render();
+          }
       }
 
       cleanCard(){
@@ -304,23 +306,12 @@
           this.$.author.value = '';
           this.file = [];
       }
-
-      getConsole(){
-          console.log(this.card);
-      }
-
-      fileSaved(){
-          console.log(this.files);
-      }
-
-      getMessage(){
-          return `Here drop only type files: ${this.filesAccepted}`;
-      }
-
       closeForm(){
             this.set('hide', true);
       }
-
+    getMessage(){
+            return `Here drop only type files: ${this.filesAccepted}`;
+    }
       openForm(){
             this.set('hide', false);
       }
