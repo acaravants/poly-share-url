@@ -21,14 +21,14 @@
     <div class="vertical-section-container centered">
       <h3>Basic poly-share-url demo</h3>
       <demo-snippet>
-          <poly-share-url files-accepted="image/*" data-uploads='[{"url":"link.org","description":"descrp","author":"author"},{"url":"www.somelink.net","description":"descrp dssd","author":"some author"}]' object="[[uploaded-file]]"></poly-share-url>      
+          <poly-share-url files-accepted="image/*" data-uploads='[{"url":"https://www.google.com","description":"descrp","author":"author"},{"url":"www.somelink.net","description":"descrp dssd","author":"some author"}]' object="[[uploaded-file]]"></poly-share-url>      
       </demo-snippet>
     </div>
 	
 	<script>
 	document.querySelector('poly-share-url')
 	.addEventListener('upload-file', function (event) {
-		console.log(event.detail.shareObject); // true
+		console.log(event.detail); // true
 	})
 	</script>
   

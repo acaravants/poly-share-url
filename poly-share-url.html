@@ -25,6 +25,12 @@
 		--brand-transparent-background:rgba(0,0,0,0.4);
 	}
 
+	.error-message{
+		color:var(--brand-red);
+		font-weight:bold;
+	}
+	
+	
 	.card-container{
 		display: grid;
 		grid-template-columns: repeat(3,33%);
@@ -207,18 +213,20 @@
     </style>
 	 
 	<div class="upload-form">
+	  <template is="dom-if" if="[[error]]">
+		<h3 class="error-message">The author and the file or link is required... </h3>
+	</template>
 		<button class="upload-form__button" on-click="openForm">Upload file/link</button>
         <template is="dom-if" if="[[!hide]]">
             <div class="upload-form__view">
 		
-				<iron-form>
-					<form is="iron-form">
-						<paper-input label="Url" id="url"></paper-input>
-						<paper-input label="Author" id="author"></paper-input>
-						<paper-textarea label="description" id="description" rows="3"></paper-textarea>
+			<div class="input">
+					   <paper-input label="Url" id="url" value="{{url}}"></paper-input>
+						<paper-input label="Author" id="author" value="{{author}}"></paper-input>
+						<paper-textarea label="description" id="description" rows="3" value="{{description}}"></paper-textarea>
 						
-					</form>
-				</iron-form>
+			</div>
+				
 				<file-drop-zone id="dragdrop" accept="[[filesAccepted]]" files="{{files}}" last-error="{{error}}" on-error="onError">
 					<div slot="drop-zone" class="layout vertical center center-justified">
 						<iron-icon icon="description"></iron-icon>
@@ -241,7 +249,7 @@
 	<div class="card-container">
 	 <template id="list" is="dom-repeat" items="[[dataUploads]]" as="info">
 		<div class="card">
-			<a class="card__link" href=""><h1>[[info.url]]</h1></a>
+			<a class="card__link" target="_blank" href$=[[info.url]]><h1>[[info.url]]</h1></a>
 			<h3>[[info.author]]</h3>
 			<div class="card-info">
 			<p>[[info.description]]</p>
@@ -280,13 +288,17 @@
                 type: Array,
                 value: []
             },
+			error:{
+				type:Boolean,
+				value:false
+			}
         };
       }
 
       cleanCard(){
-          this.$.url.value = '';
-          this.$.description.value = '';
-          this.$.author.value = '';
+          this.url = '';
+          this.description = '';
+          this.author = '';
           this.file = [];
       }
 
@@ -298,13 +310,14 @@
             this.set('hide', false);
       }
 	  
-	   uploadFile(){
-	
-		  if(this.$.url && this.$.author) {
+	  
+	  uploadFile(){
+	  
+		  if((this.url !== '' || this.files !== undefined) && this.author !=='') {
 			let cardObject = {
-				url: this.$.url.value,
-				description: this.$.description.value,
-				author: this.$.author.value,
+				url: this.url,
+				description: this.description,
+				author: this.author,
 			};
 		
 			this.dataUploads.push(cardObject);
@@ -312,13 +325,18 @@
 			this.dispatchEvent(new CustomEvent('upload-file', {
 					composed: true,
 					bubbles: true,
-					detail:{shareObject:cardObject,file:files} 
+					detail:{shareObject:cardObject,file:this.files} 
 					}));
 			this.cleanCard();
-			files = [];
+			this.files = [];
 			this.set('hide', true);   
 			this.$.list.render();
 			
+			this.set('error',false);
+			
+			} else {
+			
+			this.set('error',true);
 			
 			}
 		
