@@ -64,7 +64,10 @@
 
 
 	.card__link h1{
-		font-size:var(--title-size);
+		font-size:var(--text-size);
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 	.card{
 		display: flex;
@@ -192,6 +195,10 @@
         font-size: 0.6em;
     }
 
+	.button_center{
+		text-align: center;
+	}
+
 	@media screen and (max-width:767px){
 		:root{
 		--title-size:18px;
@@ -202,7 +209,7 @@
 
 	.card-container{
 		display: grid;
-		grid-template-columns: repeat(2,50%);
+		grid-template-columns: 100%;
 		grid-gap: 8px 3px;
 		margin: 4px;
 		padding: 4px;
@@ -216,7 +223,9 @@
 	  <template is="dom-if" if="[[error]]">
 		<h3 class="error-message">The author and the file or link is required... </h3>
 	</template>
-		<button class="upload-form__button" on-click="openForm">Upload file/link</button>
+		<div class="button_center">
+			<button class="upload-form__button" on-click="openForm">Upload file/link</button>
+		</div>
         <template is="dom-if" if="[[!hide]]">
             <div class="upload-form__view">
 		
@@ -230,7 +239,6 @@
 				<file-drop-zone id="dragdrop" accept="[[filesAccepted]]" files="{{files}}" last-error="{{error}}" on-error="onError">
 					<div slot="drop-zone" class="layout vertical center center-justified">
 						<iron-icon icon="description"></iron-icon>
-						 <div class="title">Drop Files Here</div>
 						<div class="title">[[getMessage()]]</div>
 						<!-- error message -->
 						<div class="small">[[error.message]]</div>
@@ -309,11 +317,15 @@
       openForm(){
             this.set('hide', false);
       }
+
+        getMessage(){
+          return `Drop your type files: ${this.filesAccepted}`;
+		}
 	  
 	  
 	  uploadFile(){
 	  
-		  if((this.url !== '' || this.files !== undefined) && this.author !=='') {
+		  if((this.url !== '' || this.files.length !== 0) && this.author !=='') {
 			let cardObject = {
 				url: this.url,
 				description: this.description,
@@ -335,13 +347,8 @@
 			this.set('error',false);
 			
 			} else {
-			
 			this.set('error',true);
-			
 			}
-		
-		
-		
 	  }
 	  
 	
